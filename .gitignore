@@ -1,0 +1,17 @@
+# Cache
+__pycache__/
+
+# vs code
+.vscode/
+.ipynb_checkpoints/
+
+# pycharm
+.idea/
+
+# pycache
+__pycache__/
+
+# Data
+data/
+Informer_Hyp/
+Informer2020/
