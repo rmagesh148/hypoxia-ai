@@ -13,7 +13,7 @@ __pycache__/
 
 # Data
 data/
-df_hyp*.pkl
+*.pkl
 PEA*
 Informer_Hyp/
 Informer2020/
