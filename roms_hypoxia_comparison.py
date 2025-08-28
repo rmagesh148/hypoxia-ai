@@ -38,9 +38,9 @@ class ROMSHypoxiaComparison:
         self.original_coordinates = None
         
     def load_data_and_prepare_using_driver_logic(self, df_hyp_input_path):
-        """Load data and prepare using EXACT same approach as run_hypoxia_significance_tests.py"""
+        """Load data and prepare dataset using driver logic"""
         
-        print("Loading and preparing data using EXACT same approach as significance tests...")
+        print("Loading and preparing data...")
         
         # Load the preprocessed data
         df_scale_vector_rbf = pd.read_pickle(df_hyp_input_path)
@@ -61,7 +61,7 @@ class ROMSHypoxiaComparison:
         
         print(f"Processed DataFrame shape: {df_proc.shape}")
         
-        # Prepare dataset using the same function as significance tests
+        # Prepare dataset using the same function as tests
         X_train, y_train, X_test, y_test, *_ = prepare_dataset_2(
             df_proc.rename_axis('ocean_date').reset_index(), 
             predictor="oxy_class", lookback=7
