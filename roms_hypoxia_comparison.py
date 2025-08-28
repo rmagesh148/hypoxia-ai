@@ -1,15 +1,4 @@
 #!/usr/bin/env python3
-<<<<<<< Updated upstream
-=======
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Aug 28 04:15:04 2025
-
-@author: saiful
-"""
-
-#!/usr/bin/env python3
->>>>>>> Stashed changes
 """
 ROMS Hypoxia Comparison Maps
 Creates side-by-side comparison maps showing observed vs predicted hypoxia for each model
@@ -24,11 +13,8 @@ import torch
 import warnings
 warnings.filterwarnings('ignore')
 
-<<<<<<< Updated upstream
-=======
-test_yr_mnth = "_year22_month_5-6-7-8th"
+test_yr_mnth = "_year24_month_5-6-7-8th"
 
->>>>>>> Stashed changes
 try:
     import cartopy.crs as ccrs
     import cartopy.feature as cfeature
@@ -47,6 +33,11 @@ class ROMSHypoxiaComparison:
     def __init__(self):
         """Initialize the ROMS hypoxia comparison system"""
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        else:
+            print("CUDA not available, using CPU")
+        
         self.X_test = None
         self.y_test = None
         self.test_metadata = None
@@ -67,12 +58,9 @@ class ROMSHypoxiaComparison:
         print("Number of hypoxia cases:", df_hyp['oxy_class'].value_counts())
         
         # Import necessary functions from driver
-        from driver import preprocess, prepare_dataset_2
-<<<<<<< Updated upstream
-=======
-        # from driver_test_a import preprocess, prepare_dataset_2
+        # from driver import preprocess, prepare_dataset_2
+        from driver_test_a import preprocess, prepare_dataset_2
 
->>>>>>> Stashed changes
         
         # Preprocess data
         df_time = df_hyp[['ocean_date_time', 'oxyg']].copy()
@@ -113,7 +101,7 @@ class ROMSHypoxiaComparison:
             'lon_rho': df_test_coords['lon_rho'].values,
             'depth': df_test_coords['depth'].values,
             'ocean_date_time': df_test_coords['ocean_date_time'].values,
-            'oxy_class': y_test.cpu().numpy() if torch.is_tensor(y_test) else y_test
+            'oxy_class': y_test.cpu().detach().numpy() if torch.is_tensor(y_test) else y_test
         })
         
         # Store test data for inference
@@ -135,50 +123,60 @@ class ROMSHypoxiaComparison:
         
         models = {}
         model_files = {
-<<<<<<< Updated upstream
-            'lstm': 'lstm_model.pth',
-            'stt': 'stt_model.pth', 
-            'medformer': 'medformer_model.pth',
-            'tcn': 'tcn_model.pth'
-=======
             'lstm': 'saved_models/lstm_model_epoch30.pth',
             'stt': 'saved_models/stt_model_epoch30.pth', 
             'medformer': 'saved_models/medformer_model_epoch30.pth',
             'tcn': 'saved_models/tcn_model_epoch30.pth'
->>>>>>> Stashed changes
         }
         
         for model_name, model_file in model_files.items():
             if os.path.exists(model_file):
                 try:
+                    print(f"  Loading {model_name.upper()} model...")
+                    
                     # Create model instance with exact parameters used in training
                     if model_name == 'lstm':
                         model = LSTMClassifier(input_dim, 120, 2, output_dim, dropout=0.3, bidirectional=True)
                     elif model_name == 'stt':
-                        model = STT(input_dim, output_dim)
+                        # Use the exact parameters from the saved checkpoint
+                        model = STT(input_dim, output_dim, nhead=16, num_layers=3, dim_feedforward=512, dropout=0.1)
                     elif model_name == 'medformer':
-                        model = Medformer(input_dim, output_dim)
+                        model = Medformer(input_dim, output_dim, embed_dim=64, num_heads=4, num_layers=2, dropout=0.1)
                     elif model_name == 'tcn':
                         model = TCNClassifier(input_dim, output_dim, num_channels=[128,128,128], kernel_size=3, dropout=0.1)
                     
                     # Load trained weights
-                    model.load_state_dict(torch.load(model_file, map_location=self.device))
+                    checkpoint = torch.load(model_file, map_location=self.device)
+                    model.load_state_dict(checkpoint)
                     model.to(self.device)
                     model.eval()
                     
+                    # Print model info for debugging
+                    total_params = sum(p.numel() for p in model.parameters())
+                    print(f"    Model loaded: {total_params:,} parameters")
+                    print(f"    Model device: {next(model.parameters()).device}")
+                    
                     models[model_name] = model
                     print(f"  {model_name.upper()} model loaded successfully")
+                    
                 except Exception as e:
                     print(f"  Error loading {model_name} model: {e}")
+                    print(f"  Skipping {model_name} model...")
             else:
                 print(f"Warning: {model_file} not found, skipping {model_name}")
         
+        if not models:
+            print("ERROR: No models could be loaded. Please check your saved_models directory.")
+            return None
+            
+        print(f"Successfully loaded {len(models)} models: {list(models.keys())}")
         return models
     
-    def generate_predictions_for_all_models(self, models):
+    def generate_predictions_for_all_models(self, models, batch_size=1000):
         """Generate predictions from all loaded models"""
         
         print("Generating predictions from all models...")
+        print(f"Using batch size: {batch_size}")
         
         predictions = {}
         
@@ -186,27 +184,136 @@ class ROMSHypoxiaComparison:
             for model_name, model in models.items():
                 print(f"Generating predictions for {model_name.upper()}...")
                 
-                # Convert to tensor if needed
-                if not torch.is_tensor(self.X_test):
-                    X_test_tensor = torch.FloatTensor(self.X_test).to(self.device)
-                else:
-                    X_test_tensor = self.X_test.to(self.device)
-                
-                # Generate predictions
-                outputs = model(X_test_tensor)
-                if outputs.shape[1] == 2:  # Binary classification
-                    y_probs = torch.softmax(outputs, dim=1)[:, 1].cpu().numpy()
-                else:  # Single output
-                    y_probs = torch.sigmoid(outputs).cpu().numpy().flatten()
-                
-                y_pred = (y_probs > 0.5).astype(int)
-                
-                predictions[model_name] = {
-                    'probabilities': y_probs,
-                    'predictions': y_pred
-                }
-                
-                print(f"  {model_name.upper()} predictions generated")
+                try:
+                    # Convert to tensor if needed
+                    if not torch.is_tensor(self.X_test):
+                        X_test_tensor = torch.FloatTensor(self.X_test)
+                    else:
+                        X_test_tensor = self.X_test.clone()
+                    
+                    # Print tensor info for debugging
+                    print(f"  Input tensor shape: {X_test_tensor.shape}")
+                    print(f"  Input tensor dtype: {X_test_tensor.dtype}")
+                    print(f"  Device: {self.device}")
+                    
+                    # Process in batches if dataset is large
+                    total_samples = X_test_tensor.shape[0]
+                    if total_samples > batch_size:
+                        print(f"  Processing {total_samples} samples in batches of {batch_size}")
+                        
+                        all_probs = []
+                        all_preds = []
+                        
+                        for i in range(0, total_samples, batch_size):
+                            end_idx = min(i + batch_size, total_samples)
+                            batch_tensor = X_test_tensor[i:end_idx]
+                            
+                            # Move batch to device
+                            batch_tensor = batch_tensor.to(self.device)
+                            
+                            # Validate batch tensor
+                            if torch.isnan(batch_tensor).any() or torch.isinf(batch_tensor).any():
+                                batch_tensor = torch.nan_to_num(batch_tensor, nan=0.0, posinf=1.0, neginf=-1.0)
+                            
+                            # Generate predictions for batch
+                            outputs = model(batch_tensor)
+                            
+                            if outputs.shape[1] == 2:  # Binary classification
+                                y_probs = torch.softmax(outputs, dim=1)[:, 1].cpu().detach().numpy()
+                            else:  # Single output
+                                y_probs = torch.sigmoid(outputs).cpu().detach().numpy().flatten()
+                            
+                            y_pred = (y_probs > 0.5).astype(int)
+                            
+                            all_probs.extend(y_probs)
+                            all_preds.extend(y_pred)
+                            
+                            # Clean up batch memory
+                            del batch_tensor, outputs
+                            self.cleanup_cuda_memory()
+                        
+                        # Convert to numpy arrays
+                        y_probs = np.array(all_probs)
+                        y_pred = np.array(all_preds)
+                        
+                    else:
+                        # Process entire dataset at once
+                        X_test_tensor = X_test_tensor.to(self.device)
+                        
+                        # Validate tensor dimensions
+                        if len(X_test_tensor.shape) != 3:
+                            print(f"  Error: Expected 3D tensor, got {len(X_test_tensor.shape)}D")
+                            continue
+                        
+                        batch_size_actual, seq_len, features = X_test_tensor.shape
+                        print(f"  Batch size: {batch_size_actual}, Sequence length: {seq_len}, Features: {features}")
+                        
+                        # Check if tensor contains NaN or inf values
+                        if torch.isnan(X_test_tensor).any() or torch.isinf(X_test_tensor).any():
+                            print(f"  Warning: Tensor contains NaN or inf values, cleaning...")
+                            X_test_tensor = torch.nan_to_num(X_test_tensor, nan=0.0, posinf=1.0, neginf=-1.0)
+                        
+                        # Generate predictions
+                        outputs = model(X_test_tensor)
+                        
+                        if outputs.shape[1] == 2:  # Binary classification
+                            y_probs = torch.softmax(outputs, dim=1)[:, 1].cpu().detach().numpy()
+                            y_pred = (y_probs > 0.5).astype(int)
+                        else:  # Single output
+                            y_probs = torch.sigmoid(outputs).cpu().detach().numpy().flatten()
+                            y_pred = (y_probs > 0.5).astype(int)
+                    
+                    predictions[model_name] = {
+                        'probabilities': y_probs,
+                        'predictions': y_pred
+                    }
+                    
+                    print(f"  {model_name.upper()} predictions generated successfully")
+                    
+                    # Clean up CUDA memory after each model
+                    self.cleanup_cuda_memory()
+                    
+                except RuntimeError as e:
+                    if "CUDA" in str(e) or "invalid configuration" in str(e):
+                        print(f"  CUDA error with {model_name}, trying CPU fallback...")
+                        try:
+                            # Move model to CPU temporarily
+                            model_cpu = model.cpu()
+                            X_test_cpu = X_test_tensor.cpu() if torch.is_tensor(X_test_tensor) else torch.FloatTensor(self.X_test)
+                            
+                            # Generate predictions on CPU
+                            outputs = model_cpu(X_test_cpu)
+                            
+                            if outputs.shape[1] == 2:  # Binary classification
+                                y_probs = torch.softmax(outputs, dim=1)[:, 1].detach().numpy()
+                            else:  # Single output
+                                y_probs = torch.sigmoid(outputs).detach().numpy().flatten()
+                            
+                            y_pred = (y_probs > 0.5).astype(int)
+                            
+                            predictions[model_name] = {
+                                'probabilities': y_probs,
+                                'predictions': y_pred
+                            }
+                            
+                            print(f"  {model_name.upper()} predictions generated on CPU successfully")
+                            
+                            # Move model back to original device
+                            model.to(self.device)
+                            
+                            # Clean up CUDA memory after CPU fallback
+                            self.cleanup_cuda_memory()
+                            
+                        except Exception as cpu_e:
+                            print(f"  CPU fallback also failed for {model_name}: {cpu_e}")
+                            continue
+                    else:
+                        print(f"  Runtime error with {model_name}: {e}")
+                        continue
+                        
+                except Exception as e:
+                    print(f"  Error generating predictions for {model_name}: {e}")
+                    continue
         
         return predictions
     
@@ -216,7 +323,7 @@ class ROMSHypoxiaComparison:
         print("\nCreating consistent sampling across all models...")
         
         # Convert tensors to numpy if needed
-        y_test_np = self.y_test.cpu().numpy() if torch.is_tensor(self.y_test) else self.y_test
+        y_test_np = self.y_test.cpu().detach().numpy() if torch.is_tensor(self.y_test) else self.y_test
         
         # Use the first model's predictions to create the sampling strategy
         first_model_name = list(predictions.keys())[0]
@@ -291,7 +398,7 @@ class ROMSHypoxiaComparison:
             return
         
         # Convert test data to numpy
-        y_test_np = self.y_test.cpu().numpy() if torch.is_tensor(self.y_test) else self.y_test
+        y_test_np = self.y_test.cpu().detach().numpy() if torch.is_tensor(self.y_test) else self.y_test
         
         # Create comparison maps for each model using the same sampled data points
         for model_name, pred_data in predictions.items():
@@ -416,15 +523,9 @@ class ROMSHypoxiaComparison:
         plt.subplots_adjust(top=0.90, bottom=0.08)
         
         # Save the plot
-<<<<<<< Updated upstream
-        output_dir = 'roms_hindcast_plots'
-        os.makedirs(output_dir, exist_ok=True)
-        filename = f"{model_name.upper()}_ROMS_hypoxia_comparison.png"
-=======
         output_dir = f'roms_hindcast_plots_{test_yr_mnth}'
         os.makedirs(output_dir, exist_ok=True)
         filename = f"{model_name.upper()}_ROMS_hypoxia_comparison_{test_yr_mnth}.png"
->>>>>>> Stashed changes
         plt.savefig(f'{output_dir}/{filename}', dpi=300, bbox_inches='tight')
         plt.close()
         
@@ -491,19 +592,62 @@ class ROMSHypoxiaComparison:
         plt.subplots_adjust(top=0.90, bottom=0.08)
         
         # Save the plot
-<<<<<<< Updated upstream
-        output_dir = 'roms_hindcast_plots'
-        os.makedirs(output_dir, exist_ok=True)
-        filename = f"{model_name.upper()}_ROMS_hypoxia_comparison_basic.png"
-=======
         output_dir = f'roms_hindcast_plots_{test_yr_mnth}'
         os.makedirs(output_dir, exist_ok=True)
         filename = f"{model_name.upper()}_ROMS_hypoxia_comparison_basic_{test_yr_mnth}.png"
->>>>>>> Stashed changes
         plt.savefig(f'{output_dir}/{filename}', dpi=300, bbox_inches='tight')
         plt.close()
         
         print(f"  Saved basic ROMS comparison map: {filename}")
+    
+    def cleanup_cuda_memory(self):
+        """Clean up CUDA memory to prevent issues"""
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            if hasattr(torch.cuda, 'synchronize'):
+                torch.cuda.synchronize()
+    
+    def validate_and_prepare_test_data(self):
+        """Validate and prepare test data for model inference"""
+        
+        print("Validating and preparing test data...")
+        
+        if self.X_test is None:
+            print("ERROR: No test data available")
+            return False
+        
+        # Convert to numpy if it's a tensor
+        if torch.is_tensor(self.X_test):
+            X_np = self.X_test.cpu().detach().numpy()
+        else:
+            X_np = self.X_test
+        
+        # Check data shape
+        if len(X_np.shape) != 3:
+            print(f"ERROR: Expected 3D data, got shape {X_np.shape}")
+            return False
+        
+        batch_size, seq_len, features = X_np.shape
+        print(f"  Data shape: {X_np.shape} (batch_size={batch_size}, seq_len={seq_len}, features={features})")
+        
+        # Check for NaN or inf values
+        if np.isnan(X_np).any():
+            print("  WARNING: Data contains NaN values, replacing with 0")
+            X_np = np.nan_to_num(X_np, nan=0.0)
+        
+        if np.isinf(X_np).any():
+            print("  WARNING: Data contains inf values, replacing with 0")
+            X_np = np.nan_to_num(X_np, posinf=0.0, neginf=0.0)
+        
+        # Check data range
+        print(f"  Data range: [{X_np.min():.4f}, {X_np.max():.4f}]")
+        print(f"  Data mean: {X_np.mean():.4f}, std: {X_np.std():.4f}")
+        
+        # Convert back to tensor and store
+        self.X_test = torch.FloatTensor(X_np)
+        
+        print("  Test data validation completed successfully")
+        return True
     
     def run_complete_roms_analysis(self, df_hyp_input_path):
         """Run the complete ROMS comparison analysis pipeline"""
@@ -516,19 +660,32 @@ class ROMSHypoxiaComparison:
         print("\nStep 1: Preparing test data...")
         data_result = self.load_data_and_prepare_using_driver_logic(df_hyp_input_path)
         if data_result is None:
+            print("ERROR: Failed to prepare test data. Exiting.")
+            return
+        
+        # Step 1.5: Validate and prepare test data
+        print("\nStep 1.5: Validating test data...")
+        if not self.validate_and_prepare_test_data():
+            print("ERROR: Test data validation failed. Exiting.")
             return
         
         # Step 2: Load trained models
         print("\nStep 2: Loading trained models...")
         input_dim = self.X_test.shape[2]
+        print(f"  Input dimension: {input_dim}")
         models = self.load_trained_models(input_dim)
         if not models:
-            print("No models loaded. Exiting.")
+            print("ERROR: No models loaded. Exiting.")
             return
         
         # Step 3: Generate predictions for all models
         print("\nStep 3: Generating predictions...")
-        predictions = self.generate_predictions_for_all_models(models)
+        # Use smaller batch size to prevent memory issues
+        predictions = self.generate_predictions_for_all_models(models, batch_size=500)
+        
+        if not predictions:
+            print("ERROR: No predictions generated. Exiting.")
+            return
         
         # Step 4: Create consistent sampling across all models
         print("\nStep 4: Creating consistent sampling...")
@@ -542,15 +699,6 @@ class ROMSHypoxiaComparison:
         print("ROMS COMPARISON MAPS COMPLETED SUCCESSFULLY!")
         print("=" * 60)
         print("All models have been compared using the same sampled data points.")
-<<<<<<< Updated upstream
-        print("ROMS comparison maps saved in: roms_hindcast_plots/")
-        print("Files generated:")
-        for model_name in predictions.keys():
-            if CARTOPY_AVAILABLE:
-                print(f"  - {model_name.upper()}_ROMS_hypoxia_comparison.png")
-            else:
-                print(f"  - {model_name.upper()}_ROMS_hypoxia_comparison_basic.png")
-=======
         print(f"ROMS comparison maps saved in: roms_hindcast_plots_{test_yr_mnth}/")
         print("Files generated:")
         for model_name in predictions.keys():
@@ -558,7 +706,6 @@ class ROMSHypoxiaComparison:
                 print(f"  - {model_name.upper()}_ROMS_hypoxia_comparison_{test_yr_mnth}.png")
             else:
                 print(f"  - {model_name.upper()}_ROMS_hypoxia_comparison_basic_{test_yr_mnth}.png")
->>>>>>> Stashed changes
 
 def main():
     """Main function to run the ROMS hypoxia comparison"""
@@ -566,19 +713,11 @@ def main():
     # Initialize the comparison system
     comparison = ROMSHypoxiaComparison()
     
-<<<<<<< Updated upstream
-    # Run the complete ROMS analysis
-    comparison.run_complete_roms_analysis('df_hyp_input.pkl')
-
-if __name__ == "__main__":
-    main() 
-=======
     # Run the complete ROMS analysis   
-    comparison.run_complete_roms_analysis('df_hyp_input.pkl')
+    comparison.run_complete_roms_analysis('df_hyp_input_2018_2025.pkl')
     # comparison.run_complete_roms_analysis('df_hyp_input_2018_2025.pkl')
 
 
 if __name__ == "__main__":
     main() 
     print('Execution Finished..')
->>>>>>> Stashed changes

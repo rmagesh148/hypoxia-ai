@@ -42,11 +42,11 @@ global_scalers = {
     "std":    StandardScaler()
 }
 
-import os
 # import os
-os.environ["CUDA_VISIBLE_DEVICES"]="5"
-import sys
-sys.stdout = open("console_outputs_year22-23-24/console_output_epoch30_year22_month_8-th.txt", "w")
+# # import os
+# os.environ["CUDA_VISIBLE_DEVICES"]="5"
+# import sys
+# sys.stdout = open("console_outputs_year22-23-24/console_output_epoch30_year22_month_8-th.txt", "w")
 # 2) per-depth scalers container
 depth_scalers = {}
 
@@ -56,7 +56,7 @@ import torch.nn as nn
 def preprocess(df):
     # keep original coords for diagnostics
     df = add_time_features(df)
-    print(f"df shape: {df.head()}")
+    print(f"df shape: {df.tail()}")
     # df = encode_depth(df)
     
     # drop columns we don’t want to scale / feed directly
