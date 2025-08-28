@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+<<<<<<< Updated upstream
+=======
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Aug 28 04:15:04 2025
+
+@author: saiful
+"""
+
+#!/usr/bin/env python3
+>>>>>>> Stashed changes
 """
 ROMS Hypoxia Comparison Maps
 Creates side-by-side comparison maps showing observed vs predicted hypoxia for each model
@@ -13,6 +24,11 @@ import torch
 import warnings
 warnings.filterwarnings('ignore')
 
+<<<<<<< Updated upstream
+=======
+test_yr_mnth = "_year22_month_5-6-7-8th"
+
+>>>>>>> Stashed changes
 try:
     import cartopy.crs as ccrs
     import cartopy.feature as cfeature
@@ -52,6 +68,11 @@ class ROMSHypoxiaComparison:
         
         # Import necessary functions from driver
         from driver import preprocess, prepare_dataset_2
+<<<<<<< Updated upstream
+=======
+        # from driver_test_a import preprocess, prepare_dataset_2
+
+>>>>>>> Stashed changes
         
         # Preprocess data
         df_time = df_hyp[['ocean_date_time', 'oxyg']].copy()
@@ -114,10 +135,17 @@ class ROMSHypoxiaComparison:
         
         models = {}
         model_files = {
+<<<<<<< Updated upstream
             'lstm': 'lstm_model.pth',
             'stt': 'stt_model.pth', 
             'medformer': 'medformer_model.pth',
             'tcn': 'tcn_model.pth'
+=======
+            'lstm': 'saved_models/lstm_model_epoch30.pth',
+            'stt': 'saved_models/stt_model_epoch30.pth', 
+            'medformer': 'saved_models/medformer_model_epoch30.pth',
+            'tcn': 'saved_models/tcn_model_epoch30.pth'
+>>>>>>> Stashed changes
         }
         
         for model_name, model_file in model_files.items():
@@ -388,9 +416,15 @@ class ROMSHypoxiaComparison:
         plt.subplots_adjust(top=0.90, bottom=0.08)
         
         # Save the plot
+<<<<<<< Updated upstream
         output_dir = 'roms_hindcast_plots'
         os.makedirs(output_dir, exist_ok=True)
         filename = f"{model_name.upper()}_ROMS_hypoxia_comparison.png"
+=======
+        output_dir = f'roms_hindcast_plots_{test_yr_mnth}'
+        os.makedirs(output_dir, exist_ok=True)
+        filename = f"{model_name.upper()}_ROMS_hypoxia_comparison_{test_yr_mnth}.png"
+>>>>>>> Stashed changes
         plt.savefig(f'{output_dir}/{filename}', dpi=300, bbox_inches='tight')
         plt.close()
         
@@ -457,9 +491,15 @@ class ROMSHypoxiaComparison:
         plt.subplots_adjust(top=0.90, bottom=0.08)
         
         # Save the plot
+<<<<<<< Updated upstream
         output_dir = 'roms_hindcast_plots'
         os.makedirs(output_dir, exist_ok=True)
         filename = f"{model_name.upper()}_ROMS_hypoxia_comparison_basic.png"
+=======
+        output_dir = f'roms_hindcast_plots_{test_yr_mnth}'
+        os.makedirs(output_dir, exist_ok=True)
+        filename = f"{model_name.upper()}_ROMS_hypoxia_comparison_basic_{test_yr_mnth}.png"
+>>>>>>> Stashed changes
         plt.savefig(f'{output_dir}/{filename}', dpi=300, bbox_inches='tight')
         plt.close()
         
@@ -502,6 +542,7 @@ class ROMSHypoxiaComparison:
         print("ROMS COMPARISON MAPS COMPLETED SUCCESSFULLY!")
         print("=" * 60)
         print("All models have been compared using the same sampled data points.")
+<<<<<<< Updated upstream
         print("ROMS comparison maps saved in: roms_hindcast_plots/")
         print("Files generated:")
         for model_name in predictions.keys():
@@ -509,6 +550,15 @@ class ROMSHypoxiaComparison:
                 print(f"  - {model_name.upper()}_ROMS_hypoxia_comparison.png")
             else:
                 print(f"  - {model_name.upper()}_ROMS_hypoxia_comparison_basic.png")
+=======
+        print(f"ROMS comparison maps saved in: roms_hindcast_plots_{test_yr_mnth}/")
+        print("Files generated:")
+        for model_name in predictions.keys():
+            if CARTOPY_AVAILABLE:
+                print(f"  - {model_name.upper()}_ROMS_hypoxia_comparison_{test_yr_mnth}.png")
+            else:
+                print(f"  - {model_name.upper()}_ROMS_hypoxia_comparison_basic_{test_yr_mnth}.png")
+>>>>>>> Stashed changes
 
 def main():
     """Main function to run the ROMS hypoxia comparison"""
@@ -516,8 +566,19 @@ def main():
     # Initialize the comparison system
     comparison = ROMSHypoxiaComparison()
     
+<<<<<<< Updated upstream
     # Run the complete ROMS analysis
     comparison.run_complete_roms_analysis('df_hyp_input.pkl')
 
 if __name__ == "__main__":
     main() 
+=======
+    # Run the complete ROMS analysis   
+    comparison.run_complete_roms_analysis('df_hyp_input.pkl')
+    # comparison.run_complete_roms_analysis('df_hyp_input_2018_2025.pkl')
+
+
+if __name__ == "__main__":
+    main() 
+    print('Execution Finished..')
+>>>>>>> Stashed changes

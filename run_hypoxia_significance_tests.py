@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+<<<<<<< Updated upstream
+=======
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Aug 27 22:29:32 2025
+
+@author: saiful
+"""
+
+#!/usr/bin/env python3
+>>>>>>> Stashed changes
 """
 Run significance tests on hypoxia prediction models using existing StatisticalAnalyzer
 Loads pre-trained models and generates predictions without retraining
@@ -16,13 +27,24 @@ from statistical_analysis import StatisticalAnalyzer
 import warnings
 warnings.filterwarnings('ignore')
 
+<<<<<<< Updated upstream
+=======
+test_yr_mnth = "_year24_month_5-6-7-8th"
+
+>>>>>>> Stashed changes
 def load_data_and_prepare():
     """Load data and prepare for model inference"""
     
     print("Loading and preparing data...")
     
     # Load the preprocessed data
+<<<<<<< Updated upstream
     df_scale_vector_rbf = pd.read_pickle('df_hyp_input.pkl')
+=======
+    # df_scale_vector_rbf = pd.read_pickle('df_hyp_input.pkl')
+    df_scale_vector_rbf = pd.read_pickle('df_hyp_input_2018_2025.pkl')
+
+>>>>>>> Stashed changes
     df_hyp = df_scale_vector_rbf.copy()
     
     # Create binary classification target
@@ -30,7 +52,11 @@ def load_data_and_prepare():
     print("Number of hypoxia cases:", df_hyp['oxy_class'].value_counts())
     
     # Import necessary functions from driver
+<<<<<<< Updated upstream
     from driver import preprocess, prepare_dataset_2
+=======
+    from driver_test_a import preprocess, prepare_dataset_2
+>>>>>>> Stashed changes
     
     # Preprocess data
     df_time = df_hyp[['ocean_date_time', 'oxyg']].copy()
@@ -46,9 +72,15 @@ def load_data_and_prepare():
         predictor="oxy_class", lookback=7
     )
     
+<<<<<<< Updated upstream
     if X_train is None or X_test is None:
         print("No valid data available. Exiting.")
         return None, None, None
+=======
+    # if X_train is None or X_test is None:
+    #     print("No valid data available. Exiting.")
+    #     return None, None, None
+>>>>>>> Stashed changes
     
     print(f"Train set: {X_train.shape}, Test set: {X_test.shape}")
     
@@ -67,10 +99,17 @@ def load_trained_models(input_dim, output_dim=2):
     
     models = {}
     model_files = {
+<<<<<<< Updated upstream
         'lstm': 'lstm_model.pth',
         'stt': 'stt_model.pth', 
         'medformer': 'medformer_model.pth',
         'tcn': 'tcn_model.pth'
+=======
+        'lstm': 'saved_models/lstm_model_epoch30.pth',
+        'stt': 'saved_models/stt_model_epoch30.pth', 
+        'medformer': 'saved_models/medformer_model_epoch30.pth',
+        'tcn': 'saved_models/tcn_model_epoch30.pth'
+>>>>>>> Stashed changes
     }
     
     for model_name, model_file in model_files.items():
@@ -180,7 +219,11 @@ def run_significance_tests(predictions, y_test):
 def create_results_folder():
     """Create results folder with timestamp"""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+<<<<<<< Updated upstream
     results_dir = f"significance_test_results_{timestamp}"
+=======
+    results_dir = f"significance_test_results_{test_yr_mnth}"
+>>>>>>> Stashed changes
     os.makedirs(results_dir, exist_ok=True)
     return results_dir
 
@@ -214,7 +257,11 @@ def save_results(results, predictions, y_test, results_dir):
         json.dump(json_results, f, indent=2)
     
     # 2. Save summary report
+<<<<<<< Updated upstream
     with open(f'{results_dir}/summary_report.txt', 'w') as f:
+=======
+    with open(f'{results_dir}/summary_report_{test_yr_mnth}.txt', 'w') as f:
+>>>>>>> Stashed changes
         f.write("HYPOXIA MODEL SIGNIFICANCE TEST RESULTS\n")
         f.write("=" * 50 + "\n\n")
         f.write(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
@@ -268,7 +315,11 @@ def create_visualizations(results, predictions, y_test, results_dir):
                 f'{acc:.3f}', ha='center', va='bottom', fontweight='bold')
     
     plt.tight_layout()
+<<<<<<< Updated upstream
     plt.savefig(f'{results_dir}/model_accuracy_comparison.png', dpi=300, bbox_inches='tight')
+=======
+    plt.savefig(f'{results_dir}/model_accuracy_comparison_{test_yr_mnth}.png', dpi=300, bbox_inches='tight')
+>>>>>>> Stashed changes
     plt.close()
     
     # 2. Significance test heatmap
@@ -297,7 +348,11 @@ def create_visualizations(results, predictions, y_test, results_dir):
     plt.xlabel('Model 2')
     plt.ylabel('Model 1')
     plt.tight_layout()
+<<<<<<< Updated upstream
     plt.savefig(f'{results_dir}/significance_test_heatmap.png', dpi=300, bbox_inches='tight')
+=======
+    plt.savefig(f'{results_dir}/significance_test_heatmap_{test_yr_mnth}.png', dpi=300, bbox_inches='tight')
+>>>>>>> Stashed changes
     plt.close()
     
     # 3. Effect size comparison
@@ -332,7 +387,11 @@ def create_visualizations(results, predictions, y_test, results_dir):
                 fontweight='bold', color=color)
     
     plt.tight_layout()
+<<<<<<< Updated upstream
     plt.savefig(f'{results_dir}/effect_size_comparison.png', dpi=300, bbox_inches='tight')
+=======
+    plt.savefig(f'{results_dir}/effect_size_comparison_{test_yr_mnth}.png', dpi=300, bbox_inches='tight')
+>>>>>>> Stashed changes
     plt.close()
 
 def main():
@@ -391,4 +450,9 @@ def main():
     print("  - effect_size_comparison.png")
 
 if __name__ == "__main__":
+<<<<<<< Updated upstream
     main() 
+=======
+    main() 
+    print('Execution Finished..')
+>>>>>>> Stashed changes
