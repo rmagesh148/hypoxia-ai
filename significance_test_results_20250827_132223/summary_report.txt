@@ -1,0 +1,50 @@
+HYPOXIA MODEL SIGNIFICANCE TEST RESULTS
+==================================================
+
+Generated on: 2025-08-27 13:22:23
+
+MODEL PERFORMANCE SUMMARY:
+------------------------------
+LSTM: 0.9746
+STT: 0.9488
+MEDFORMER: 0.9713
+TCN: 0.9744
+
+SIGNIFICANCE TEST RESULTS:
+------------------------------
+
+LSTM_VS_STT:
+  McNemar Test: p-value = 0.00e+00
+  Chi-Square Test: p-value = 0.00e+00
+  Effect Size: 1.5805
+  Interpretation: Significant difference with large effect size
+
+LSTM_VS_MEDFORMER:
+  McNemar Test: p-value = 1.66e-05
+  Chi-Square Test: p-value = 0.00e+00
+  Effect Size: 1.6447
+  Interpretation: Significant difference with large effect size
+
+LSTM_VS_TCN:
+  McNemar Test: p-value = 8.53e-01
+  Chi-Square Test: p-value = 0.00e+00
+  Effect Size: 1.6591
+  Interpretation: No significant difference between models
+
+STT_VS_MEDFORMER:
+  McNemar Test: p-value = 0.00e+00
+  Chi-Square Test: p-value = 0.00e+00
+  Effect Size: 1.5833
+  Interpretation: Significant difference with large effect size
+
+STT_VS_TCN:
+  McNemar Test: p-value = 0.00e+00
+  Chi-Square Test: p-value = 0.00e+00
+  Effect Size: 1.5766
+  Interpretation: Significant difference with large effect size
+
+MEDFORMER_VS_TCN:
+  McNemar Test: p-value = 2.99e-05
+  Chi-Square Test: p-value = 0.00e+00
+  Effect Size: 1.6451
+  Interpretation: Significant difference with large effect size

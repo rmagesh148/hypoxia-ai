@@ -1,0 +1,572 @@
+{
+  "lstm_vs_stt": {
+    "mcnemar_test": {
+      "test_name": "McNemar's Test",
+      "statistic": 455.99617041646724,
+      "p_value": 0.0,
+      "is_significant": true,
+      "alpha": 0.05,
+      "contingency_table": [
+        [
+          35368,
+          1533
+        ],
+        [
+          556,
+          407
+        ]
+      ],
+      "effect_size": 1.5804753160079357,
+      "interpretation": "Significant difference with large effect size"
+    },
+    "chi2_test": {
+      "test_name": "Chi-Square Test",
+      "statistic": 2796.1058298285748,
+      "p_value": 0.0,
+      "degrees_of_freedom": 1,
+      "is_significant": true,
+      "alpha": 0.05,
+      "contingency_table": [
+        [
+          35368,
+          1533
+        ],
+        [
+          556,
+          407
+        ]
+      ]
+    },
+    "model1_analysis": {
+      "model_name": "lstm",
+      "confusion_matrix": [
+        [
+          35594,
+          395
+        ],
+        [
+          568,
+          1307
+        ]
+      ],
+      "metrics": {
+        "accuracy": 0.9745668709064018,
+        "precision": 0.7679200940070505,
+        "recall": 0.6970666666666666,
+        "specificity": 0.9890244241295951,
+        "f1_score": 0.7307799832261671,
+        "mcc": 0.7183917012459986,
+        "kappa": 0.717465739254432
+      },
+      "raw_counts": {
+        "true_negatives": 35594,
+        "false_positives": 395,
+        "false_negatives": 568,
+        "true_positives": 1307
+      }
+    },
+    "model2_analysis": {
+      "model_name": "stt",
+      "confusion_matrix": [
+        [
+          34096,
+          1893
+        ],
+        [
+          47,
+          1828
+        ]
+      ],
+      "metrics": {
+        "accuracy": 0.9487639974646102,
+        "precision": 0.49126578876646065,
+        "recall": 0.9749333333333333,
+        "specificity": 0.9474005946261358,
+        "f1_score": 0.6533238027162259,
+        "mcc": 0.6721915304508189,
+        "kappa": 0.6288840769173862
+      },
+      "raw_counts": {
+        "true_negatives": 34096,
+        "false_positives": 1893,
+        "false_negatives": 47,
+        "true_positives": 1828
+      }
+    }
+  },
+  "lstm_vs_medformer": {
+    "mcnemar_test": {
+      "test_name": "McNemar's Test",
+      "statistic": 18.540441176470587,
+      "p_value": 1.6633729027715205e-05,
+      "is_significant": true,
+      "alpha": 0.05,
+      "contingency_table": [
+        [
+          36431,
+          470
+        ],
+        [
+          346,
+          617
+        ]
+      ],
+      "effect_size": 1.6446804932006638,
+      "interpretation": "Significant difference with large effect size"
+    },
+    "chi2_test": {
+      "test_name": "Chi-Square Test",
+      "statistic": 13250.27052645606,
+      "p_value": 0.0,
+      "degrees_of_freedom": 1,
+      "is_significant": true,
+      "alpha": 0.05,
+      "contingency_table": [
+        [
+          36431,
+          470
+        ],
+        [
+          346,
+          617
+        ]
+      ]
+    },
+    "model1_analysis": {
+      "model_name": "lstm",
+      "confusion_matrix": [
+        [
+          35594,
+          395
+        ],
+        [
+          568,
+          1307
+        ]
+      ],
+      "metrics": {
+        "accuracy": 0.9745668709064018,
+        "precision": 0.7679200940070505,
+        "recall": 0.6970666666666666,
+        "specificity": 0.9890244241295951,
+        "f1_score": 0.7307799832261671,
+        "mcc": 0.7183917012459986,
+        "kappa": 0.717465739254432
+      },
+      "raw_counts": {
+        "true_negatives": 35594,
+        "false_positives": 395,
+        "false_negatives": 568,
+        "true_positives": 1307
+      }
+    },
+    "model2_analysis": {
+      "model_name": "medformer",
+      "confusion_matrix": [
+        [
+          35421,
+          568
+        ],
+        [
+          519,
+          1356
+        ]
+      ],
+      "metrics": {
+        "accuracy": 0.9712919923938306,
+        "precision": 0.7047817047817048,
+        "recall": 0.7232,
+        "specificity": 0.9842173997610381,
+        "f1_score": 0.7138720715977889,
+        "mcc": 0.6988270273139493,
+        "kappa": 0.698762593982057
+      },
+      "raw_counts": {
+        "true_negatives": 35421,
+        "false_positives": 568,
+        "false_negatives": 519,
+        "true_positives": 1356
+      }
+    }
+  },
+  "lstm_vs_tcn": {
+    "mcnemar_test": {
+      "test_name": "McNemar's Test",
+      "statistic": 0.034261241970021415,
+      "p_value": 0.8531522288197092,
+      "is_significant": false,
+      "alpha": 0.05,
+      "contingency_table": [
+        [
+          36665,
+          236
+        ],
+        [
+          231,
+          732
+        ]
+      ],
+      "effect_size": 1.659060717145195,
+      "interpretation": "No significant difference between models"
+    },
+    "chi2_test": {
+      "test_name": "Chi-Square Test",
+      "statistic": 21372.37055984944,
+      "p_value": 0.0,
+      "degrees_of_freedom": 1,
+      "is_significant": true,
+      "alpha": 0.05,
+      "contingency_table": [
+        [
+          36665,
+          236
+        ],
+        [
+          231,
+          732
+        ]
+      ]
+    },
+    "model1_analysis": {
+      "model_name": "lstm",
+      "confusion_matrix": [
+        [
+          35594,
+          395
+        ],
+        [
+          568,
+          1307
+        ]
+      ],
+      "metrics": {
+        "accuracy": 0.9745668709064018,
+        "precision": 0.7679200940070505,
+        "recall": 0.6970666666666666,
+        "specificity": 0.9890244241295951,
+        "f1_score": 0.7307799832261671,
+        "mcc": 0.7183917012459986,
+        "kappa": 0.717465739254432
+      },
+      "raw_counts": {
+        "true_negatives": 35594,
+        "false_positives": 395,
+        "false_negatives": 568,
+        "true_positives": 1307
+      }
+    },
+    "model2_analysis": {
+      "model_name": "tcn",
+      "confusion_matrix": [
+        [
+          35663,
+          326
+        ],
+        [
+          642,
+          1233
+        ]
+      ],
+      "metrics": {
+        "accuracy": 0.9744348193534756,
+        "precision": 0.790891597177678,
+        "recall": 0.6576,
+        "specificity": 0.9909416766234127,
+        "f1_score": 0.7181129877693653,
+        "mcc": 0.7081367567143997,
+        "kappa": 0.7048419388680157
+      },
+      "raw_counts": {
+        "true_negatives": 35663,
+        "false_positives": 326,
+        "false_negatives": 642,
+        "true_positives": 1233
+      }
+    }
+  },
+  "stt_vs_medformer": {
+    "mcnemar_test": {
+      "test_name": "McNemar's Test",
+      "statistic": 389.22466487935657,
+      "p_value": 0.0,
+      "is_significant": true,
+      "alpha": 0.05,
+      "contingency_table": [
+        [
+          35418,
+          506
+        ],
+        [
+          1359,
+          581
+        ]
+      ],
+      "effect_size": 1.5832575480711903,
+      "interpretation": "Significant difference with large effect size"
+    },
+    "chi2_test": {
+      "test_name": "Chi-Square Test",
+      "statistic": 5366.431202444692,
+      "p_value": 0.0,
+      "degrees_of_freedom": 1,
+      "is_significant": true,
+      "alpha": 0.05,
+      "contingency_table": [
+        [
+          35418,
+          506
+        ],
+        [
+          1359,
+          581
+        ]
+      ]
+    },
+    "model1_analysis": {
+      "model_name": "stt",
+      "confusion_matrix": [
+        [
+          34096,
+          1893
+        ],
+        [
+          47,
+          1828
+        ]
+      ],
+      "metrics": {
+        "accuracy": 0.9487639974646102,
+        "precision": 0.49126578876646065,
+        "recall": 0.9749333333333333,
+        "specificity": 0.9474005946261358,
+        "f1_score": 0.6533238027162259,
+        "mcc": 0.6721915304508189,
+        "kappa": 0.6288840769173862
+      },
+      "raw_counts": {
+        "true_negatives": 34096,
+        "false_positives": 1893,
+        "false_negatives": 47,
+        "true_positives": 1828
+      }
+    },
+    "model2_analysis": {
+      "model_name": "medformer",
+      "confusion_matrix": [
+        [
+          35421,
+          568
+        ],
+        [
+          519,
+          1356
+        ]
+      ],
+      "metrics": {
+        "accuracy": 0.9712919923938306,
+        "precision": 0.7047817047817048,
+        "recall": 0.7232,
+        "specificity": 0.9842173997610381,
+        "f1_score": 0.7138720715977889,
+        "mcc": 0.6988270273139493,
+        "kappa": 0.698762593982057
+      },
+      "raw_counts": {
+        "true_negatives": 35421,
+        "false_positives": 568,
+        "false_negatives": 519,
+        "true_positives": 1356
+      }
+    }
+  },
+  "stt_vs_tcn": {
+    "mcnemar_test": {
+      "test_name": "McNemar's Test",
+      "statistic": 425.4697653429603,
+      "p_value": 0.0,
+      "is_significant": true,
+      "alpha": 0.05,
+      "contingency_table": [
+        [
+          35302,
+          622
+        ],
+        [
+          1594,
+          346
+        ]
+      ],
+      "effect_size": 1.5765500051213044,
+      "interpretation": "Significant difference with large effect size"
+    },
+    "chi2_test": {
+      "test_name": "Chi-Square Test",
+      "statistic": 1909.5839837381109,
+      "p_value": 0.0,
+      "degrees_of_freedom": 1,
+      "is_significant": true,
+      "alpha": 0.05,
+      "contingency_table": [
+        [
+          35302,
+          622
+        ],
+        [
+          1594,
+          346
+        ]
+      ]
+    },
+    "model1_analysis": {
+      "model_name": "stt",
+      "confusion_matrix": [
+        [
+          34096,
+          1893
+        ],
+        [
+          47,
+          1828
+        ]
+      ],
+      "metrics": {
+        "accuracy": 0.9487639974646102,
+        "precision": 0.49126578876646065,
+        "recall": 0.9749333333333333,
+        "specificity": 0.9474005946261358,
+        "f1_score": 0.6533238027162259,
+        "mcc": 0.6721915304508189,
+        "kappa": 0.6288840769173862
+      },
+      "raw_counts": {
+        "true_negatives": 34096,
+        "false_positives": 1893,
+        "false_negatives": 47,
+        "true_positives": 1828
+      }
+    },
+    "model2_analysis": {
+      "model_name": "tcn",
+      "confusion_matrix": [
+        [
+          35663,
+          326
+        ],
+        [
+          642,
+          1233
+        ]
+      ],
+      "metrics": {
+        "accuracy": 0.9744348193534756,
+        "precision": 0.790891597177678,
+        "recall": 0.6576,
+        "specificity": 0.9909416766234127,
+        "f1_score": 0.7181129877693653,
+        "mcc": 0.7081367567143997,
+        "kappa": 0.7048419388680157
+      },
+      "raw_counts": {
+        "true_negatives": 35663,
+        "false_positives": 326,
+        "false_negatives": 642,
+        "true_positives": 1233
+      }
+    }
+  },
+  "medformer_vs_tcn": {
+    "mcnemar_test": {
+      "test_name": "McNemar's Test",
+      "statistic": 17.426783479349186,
+      "p_value": 2.9858887106271048e-05,
+      "is_significant": true,
+      "alpha": 0.05,
+      "contingency_table": [
+        [
+          36437,
+          340
+        ],
+        [
+          459,
+          628
+        ]
+      ],
+      "effect_size": 1.6450507461176083,
+      "interpretation": "Significant difference with large effect size"
+    },
+    "chi2_test": {
+      "test_name": "Chi-Square Test",
+      "statistic": 13674.218283940716,
+      "p_value": 0.0,
+      "degrees_of_freedom": 1,
+      "is_significant": true,
+      "alpha": 0.05,
+      "contingency_table": [
+        [
+          36437,
+          340
+        ],
+        [
+          459,
+          628
+        ]
+      ]
+    },
+    "model1_analysis": {
+      "model_name": "medformer",
+      "confusion_matrix": [
+        [
+          35421,
+          568
+        ],
+        [
+          519,
+          1356
+        ]
+      ],
+      "metrics": {
+        "accuracy": 0.9712919923938306,
+        "precision": 0.7047817047817048,
+        "recall": 0.7232,
+        "specificity": 0.9842173997610381,
+        "f1_score": 0.7138720715977889,
+        "mcc": 0.6988270273139493,
+        "kappa": 0.698762593982057
+      },
+      "raw_counts": {
+        "true_negatives": 35421,
+        "false_positives": 568,
+        "false_negatives": 519,
+        "true_positives": 1356
+      }
+    },
+    "model2_analysis": {
+      "model_name": "tcn",
+      "confusion_matrix": [
+        [
+          35663,
+          326
+        ],
+        [
+          642,
+          1233
+        ]
+      ],
+      "metrics": {
+        "accuracy": 0.9744348193534756,
+        "precision": 0.790891597177678,
+        "recall": 0.6576,
+        "specificity": 0.9909416766234127,
+        "f1_score": 0.7181129877693653,
+        "mcc": 0.7081367567143997,
+        "kappa": 0.7048419388680157
+      },
+      "raw_counts": {
+        "true_negatives": 35663,
+        "false_positives": 326,
+        "false_negatives": 642,
+        "true_positives": 1233
+      }
+    }
+  }
+}
